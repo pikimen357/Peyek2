@@ -1,56 +1,12 @@
+@extends('customer.layout.master')
 
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Peyek</title>
-    <link rel="icon" href="{{ asset('img_item_upload/wallpaperPYK.jpeg') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('assets/landing.css') }}">
-
-<body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-white" href="#">Peyek Kriuk</a>
-            <div class="ms-auto">
-{{--                If user login show user name--}}
-
-{{--                <?php if ($user) : ?>--}}
-{{--                    <a class="nav-link d-inline text-white" href="#">Login</a>--}}
-{{--                    <a class="nav-link d-inline text-white fw-bold" href="#">--}}
-{{--                        <?= strtoupper(htmlspecialchars($user['nama'])) ?>--}}
-{{--                    </a>--}}
-{{--                <?php else : ?>--}}
-
-                    <a class="nav-link d-inline text-white me-3" href="#">Daftar</a>
-                    <a class="nav-link d-inline text-white" href="#">Login</a>
-{{--                <?php endif; ?>--}}
-            </div>
-        </div>
-    </nav>
-
-    <nav class="sub-navbar fixed-top">
-        <div class="container">
-            <ul class="nav justify-content-evenly">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Daftar Produk</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pesanan Anda</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
+@section('content')
     <main >
         <div class="container mb-2 p-4">
             <h1 class="fw-bold mt-4">Peyek Kriuk Pawon Eny</h1>
             <p class="transparent-text">Rempeyek renyah dipadukan dengan citarasa <br>khas bumbu daerah yang menggugah
                 selera.</p>
-            <button type="button"  id="pesan1"   class="pesan btn btn-dark">Pesan Sekarang</button>
+            <a href="{{ route('products') }}" id="pesan1" class="pesan btn btn-dark">Pesan Sekarang</a>
         </div>
 
         <img src="{{ asset('img_item_upload/pkacang.png') }}" class="p-4" id="topImg" alt="">
@@ -71,7 +27,7 @@
                         gurih membuat anda ketagihan</p>
                 </div>
             </div>
-            <button type="button" id="pesan2"  class="btn btn-dark">Pesan</button>
+            <a href="{{ route('products') }}" id="pesan2" class="btn btn-dark">Pesan</a>
         </div>
 
         <div class="container mb-5 p-4">
@@ -99,7 +55,7 @@
                 </div>
 
             </div>
-            <button type="button" id="pesan3"  class="btn btn-dark mt-3">Pesan</button>
+            <a href="{{ route('products') }}" id="pesan3" class="btn btn-dark mt-3">Pesan</a>
         </div>
         <div class="container mb-5 p-4">
             <h4 class="fw-bold mb-4">Review Pemesan</h4>
@@ -147,41 +103,5 @@
 
             </div>
         </div>
-
-
     </main>
-
-    <footer class="mt-auto py-3">
-        <div class="container">
-            <div class="row">
-                <!-- Kolom Kiri -->
-                <div class="col-md-6 mb-md-0 mb-3">
-                    <h5 class="text-white fw-bold mb-2">Peyek Kriuk ENI</h5>
-                    <div class="social-icons">
-                        <a href="#" class="text-dark me-2"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-dark me-2"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="text-dark me-2"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-
-                <!-- Kolom Kanan -->
-                <div class="col-md-6 text-md-end">
-                    <p class="text-dark mb-1">085229297152</p>
-                    <p class="text-dark mb-0 text-muted">Terbis, Kismantoro, Wonogiri, Jawa Tengah</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-    <script src="./app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-        integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-        crossorigin="anonymous"></script>
-</body>
-
-</html>
+@endsection
