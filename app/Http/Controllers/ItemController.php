@@ -7,14 +7,11 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+    public function index(){
         $items = Item::all();
 
-        return view('customer.products', compact('items'));
+        return view('customer.products', [
+            'items' => $items,
+        ]);
     }
-
 }

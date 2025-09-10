@@ -48,7 +48,7 @@
                       Rp{{ number_format($item->hrg_kiloan, 0, ',', '.') }}/kg
                   </p>
               </div>
-        @endforeach
+          @endforeach
       </div>
     </div>
   </main>

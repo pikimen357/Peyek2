@@ -4,9 +4,9 @@
     <main >
         <div class="container mb-2 p-4">
             <h1 class="fw-bold mt-4">Peyek Kriuk Pawon Eny</h1>
-            <p class="transparent-text">Rempeyek renyah dipadukan dengan citarasa <br>khas bumbu daerah yang menggugah
-                selera.</p>
-            <a href="{{ route('products') }}" id="pesan1" class="pesan btn btn-dark">Pesan Sekarang</a>
+            <p class="transparent-text">Rempeyek renyah dipadukan dengan citarasa <br>khas bumbu
+                daerah yang menggugah selera.</p>
+            <a href="{{ route('products') }}" id="pesan1" class="pesan btn btn-dark">{{ $button }}</a>
         </div>
 
         <img src="{{ asset('img_item_upload/pkacang.png') }}" class="p-4" id="topImg" alt="">
