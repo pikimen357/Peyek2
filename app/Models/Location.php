@@ -14,9 +14,13 @@ class Location extends Model
         'updated_at',
     ];
 
-        protected function casts(): array{
+    protected function casts(): array{
         return [
             'jarak' => 'integer',
         ];
+    }
+
+    public function orders(){
+        return $this->hasMany(Order::class, 'location_id');
     }
 }

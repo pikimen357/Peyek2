@@ -14,6 +14,7 @@ class OrderItem extends Model
         'item_id',
         'jumlah_kg',
         'harga_per_kg',
+        'total_harga',
     ];
 
     /**
@@ -22,5 +23,9 @@ class OrderItem extends Model
     public function item()
     {
         return $this->belongsTo(Item::class, 'item_id');
+    }
+
+    public function order(){
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }

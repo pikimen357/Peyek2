@@ -17,10 +17,13 @@ return new class extends Migration
             $table->string('item_id');  // relasi ke items (id_peyek)
             $table->decimal('jumlah_kg', 4, 2);
             $table->integer('harga_per_kg');
+            $table->unsignedBigInteger('total_harga');
             $table->timestamps();
 
             // foreign key (kalau tabel orders & items sudah dibuat)
-//             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+             $table->foreign('order_id')->references('id')
+                 ->on('orders')->onDelete('cascade');
+
              $table->foreign('item_id')->references('id')
                  ->on('items')->onDelete('cascade');
         });
