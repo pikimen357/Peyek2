@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrderItemFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'order_id',
+        'item_id',
+        'jumlah_kg',
+        'harga_per_kg',
+    ];
+
+    /**
+     * Relasi ke Item
+     */
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
 }

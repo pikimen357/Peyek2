@@ -29,4 +29,12 @@ class Item extends Model
             'hrg_kiloan' => 'integer',
         ];
     }
+
+        /**
+     * Relasi ke OrderItem
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'item_id');
+    }
 }
