@@ -31,7 +31,7 @@ class ItemController extends Controller
 
         // Cek produk terlaris
         if ($this->containsKeywords($message, $terlaris_keywords)) {
-            // Berdasarkan seeder, Peyek Kedelai dan Kacang Hijau adalah yang "paling banyak dipesan"
+            // Mencari produk terlaris
             $products = Item::whereIn('id', ['pkdl', 'pkhj'])->get();
             $response = 'Produk terlaris kami adalah Peyek Kedelai dan Peyek Kacang Hijau! Kedua varian ini paling banyak dipesan karena citarasanya yang gurih dan berkualitas.';
         }

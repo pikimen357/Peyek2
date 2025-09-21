@@ -55,7 +55,7 @@
     <!-- Chatbot -->
     <div class="chatbot-container">
         <button class="chatbot-button" id="chatbotToggle">
-            <i class="fas fa-comments"></i>
+            <i class="fas fa-comments text-white"></i>
         </button>
 
         <div class="chatbot-modal" id="chatbotModal">
@@ -70,7 +70,7 @@
                         Halo! Selamat datang di Peyek Kriuk. Apa yang bisa saya bantu hari ini?
                         <div class="quick-replies">
                             <div class="quick-reply" data-reply="Info produk">Info Produk</div>
-                            <div class="quick-reply" data-reply="Produk Terlaris">Produk Terlaris</div>
+                            <div class="quick-reply" data-reply="terlaris">Produk Terlaris</div>
                         </div>
                     </div>
                 </div>
