@@ -11,7 +11,11 @@ Route::get('/', function () {
 })->name('landing');
 
 Route::get('/products', [ItemController::class, 'index'])
-->name('products');
+    ->name('products');
+
+// Route baru untuk chatbot
+Route::post('/chatbot', [ItemController::class, 'chatbot'])
+    ->name('chatbot');
 
 Route::get('/location/search/', [LocationController::class, 'search'])
     ->name('location.search');

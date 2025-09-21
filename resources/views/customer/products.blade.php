@@ -1,6 +1,7 @@
 @extends('customer.layout.master')
 
 @section('css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('assets/products/style.css') }}">
 @endsection
 
@@ -30,7 +31,6 @@
       </div>
     </div>
 
-
     <div class="d-flex justify-content-center container p-4 mt-5" id="varCont">
       <div class="row w-100 mb-5" style="max-width: 600px;">
         <h2 id="varianLain" class="mb-4 fw-bold fs-3">Varian Lainnya</h2>
@@ -51,10 +51,45 @@
           @endforeach
       </div>
     </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <button class="chatbot-button" id="chatbotToggle">
+            <i class="fas fa-comments"></i>
+        </button>
+
+        <div class="chatbot-modal" id="chatbotModal">
+            <div class="chatbot-header">
+                <span>CHATBOT</span>
+                <button class="chatbot-close" id="chatbotClose">&times;</button>
+            </div>
+
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-bubble">
+                        Halo! Selamat datang di Peyek Kriuk. Apa yang bisa saya bantu hari ini?
+                        <div class="quick-replies">
+                            <div class="quick-reply" data-reply="Info produk">Info Produk</div>
+                            <div class="quick-reply" data-reply="Produk Terlaris">Produk Terlaris</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chatbot-input-container">
+                <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Ketik pesan Anda...">
+                <button class="chatbot-send" id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
   </main>
 @endsection
 
 @section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script>
             const jumlahInput = document.getElementById('jumlah');
             const plusBtn = document.getElementById('plus');
@@ -68,7 +103,6 @@
             const topTopping = document.getElementById('toping');
 
             const varianItems = document.querySelectorAll('.varian-item');
-            // const selectedId = document.querySelector('.varian-item[data-gambar="' + varianItems.src.split('/').pop() + '"]')?.getAttribute("data-id");
 
             let jumlah = 0.5;
             let hargaPerKg = 50000;
@@ -96,25 +130,6 @@
 
             updateHarga();
 
-            // checkout.addEventListener('click', () => {
-            //     const data = {
-            //         id_peyek: document.getElementById("topImg").dataset.id,
-            //         nama: document.getElementById("Pkacang").textContent,
-            //         topping: document.getElementById("toping").textContent,
-            //         jumlah: parseFloat(document.getElementById("jumlah").value),
-            //         harga: parseInt(document.getElementById("harga").getAttribute("value")),
-            //         gambar: document.getElementById("topImg").getAttribute("src"),
-            //     };
-            //
-            //     fetch("set_checkout.php", {
-            //         method: "POST",
-            //         headers: { "Content-Type": "application/json" },
-            //         body: JSON.stringify(data),
-            //     }).then(() => {
-            //         window.location.href = "../order/index.php";
-            //     });
-            // });
-
             // Fungsi ganti varian utama saat diklik
             varianItems.forEach(item => {
               item.addEventListener('click', () => {
@@ -134,6 +149,200 @@
                 harga.setAttribute("value", hargaBaru);
                 updateHarga();
               });
+            });
+
+            // Chatbot functionality
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            const chatbotModal = document.getElementById('chatbotModal');
+            const chatbotClose = document.getElementById('chatbotClose');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const chatbotSend = document.getElementById('chatbotSend');
+
+            // Toggle chatbot
+            chatbotToggle.addEventListener('click', () => {
+                chatbotModal.style.display = chatbotModal.style.display === 'flex' ? 'none' : 'flex';
+            });
+
+            // Close chatbot
+            chatbotClose.addEventListener('click', () => {
+                chatbotModal.style.display = 'none';
+            });
+
+            // Send message function
+            function sendMessage(message, isUser = true) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+                const bubble = document.createElement('div');
+                bubble.className = 'message-bubble';
+                bubble.textContent = message;
+
+                messageDiv.appendChild(bubble);
+                chatbotMessages.appendChild(messageDiv);
+
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+                if (isUser) {
+                    // Send to server and get bot response
+                    getBotResponse(message);
+                }
+            }
+
+            // Get bot response from server
+            async function getBotResponse(message) {
+                try {
+                    // Show typing indicator
+                    showTypingIndicator();
+
+                    const response = await fetch('{{ route("chatbot") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            message: message
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    // Remove typing indicator
+                    removeTypingIndicator();
+
+                    // Send bot response
+                    setTimeout(() => {
+                        sendBotMessage(data.message, data.products);
+                    }, 500);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    removeTypingIndicator();
+                    setTimeout(() => {
+                        sendBotMessage('Maaf, terjadi kesalahan. Silakan coba lagi.', []);
+                    }, 500);
+                }
+            }
+
+            // Send bot message with products
+            function sendBotMessage(message, products = []) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+
+                const bubble = document.createElement('div');
+                bubble.className = 'message-bubble';
+                bubble.textContent = message;
+
+                // Add products if available
+                if (products && products.length > 0) {
+                    const productsContainer = document.createElement('div');
+                    productsContainer.className = 'products-container';
+                    productsContainer.style.cssText = 'margin-top: 10px; max-height: 200px; overflow-y: auto;';
+
+                    products.forEach(product => {
+                        const productDiv = document.createElement('div');
+                        productDiv.style.cssText = 'border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; margin-bottom: 8px; background: white; cursor: pointer;';
+                        productDiv.innerHTML = `
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <img src="${product.gambar}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" alt="${product.nama}">
+                                <div>
+                                    <strong style="font-size: 12px;">${product.nama}</strong><br>
+                                    <span style="font-size: 11px; color: #666;">${product.topping}</span><br>
+                                    <span style="font-size: 11px; color: #d4af37; font-weight: bold;">${product.harga}</span>
+                                </div>
+                            </div>
+                        `;
+
+                        // Add click event to select product
+                        productDiv.addEventListener('click', () => {
+                            selectProduct(product);
+                        });
+
+                        productsContainer.appendChild(productDiv);
+                    });
+
+                    bubble.appendChild(productsContainer);
+                }
+
+                messageDiv.appendChild(bubble);
+                chatbotMessages.appendChild(messageDiv);
+
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+
+            // Show typing indicator
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot typing-indicator';
+                typingDiv.innerHTML = `
+                    <div class="message-bubble">
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                `;
+                chatbotMessages.appendChild(typingDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const typingIndicator = chatbotMessages.querySelector('.typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            // Select product function
+            function selectProduct(product) {
+                // Find matching varian-item and trigger click
+                const varianItems = document.querySelectorAll('.varian-item');
+                varianItems.forEach(item => {
+                    if (item.getAttribute('data-id') === product.id) {
+                        item.click();
+                        // Close chatbot and scroll to top
+                        chatbotModal.style.display = 'none';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                        // Send confirmation message
+                        setTimeout(() => {
+                            chatbotModal.style.display = 'flex';
+                            sendBotMessage(`Produk ${product.nama} telah dipilih! Anda bisa mengatur jumlah dan checkout sekarang.`);
+                        }, 1000);
+                    }
+                });
+            }
+
+            // Send button click
+            chatbotSend.addEventListener('click', () => {
+                const message = chatbotInput.value.trim();
+                if (message) {
+                    sendMessage(message);
+                    chatbotInput.value = '';
+                }
+            });
+
+            // Enter key to send
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    chatbotSend.click();
+                }
+            });
+
+            // Quick replies
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('quick-reply')) {
+                    const reply = e.target.getAttribute('data-reply');
+                    sendMessage(reply);
+                }
+            });
+
+            // Close chatbot when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!chatbotModal.contains(e.target) && !chatbotToggle.contains(e.target)) {
+                    chatbotModal.style.display = 'none';
+                }
             });
     </script>
 @endsection
