@@ -7,10 +7,15 @@
     <div class="container">
         <ul class="nav justify-content-evenly">
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('products') }}">Daftar Produk</a>
+                <a class="nav-link" href="{{ route('products') }}">
+                    Daftar Produk</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Pesanan Anda</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-inline text-white bi bi-cart fs-3"
+                   href="{{ route('cart.show') }}"></a>
             </li>
         </ul>
     </div>

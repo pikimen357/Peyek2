@@ -29,5 +29,16 @@ Route::get('/location/filter', [LocationController::class, 'filter'])
 Route::get('/products/statistics', [ItemController::class, 'statistics'])
 ->name('products.statistics');
 
+Route::post('/add-to-cart', [ItemController::class, 'addToCart'])
+->name('cart.add');
 
+// Cart routes
+Route::group(['controller' => \App\Http\Controllers\CartController::class], function () {
+    Route::get('/cart', 'showCart')->name('cart.show');
+    Route::get('/cart-items', 'getCartItems')->name('cart.items');
+//    Route::post('/add-to-cart', 'addToCart')->name('cart.add');
+    Route::post('/update-cart-quantity', 'updateCartQuantity')->name('cart.update');
+    Route::post('/remove-from-cart', 'removeFromCart')->name('cart.remove');
+    Route::post('/clear-cart', 'clearCart')->name('cart.clear');
+});
 

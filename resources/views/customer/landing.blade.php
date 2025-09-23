@@ -7,9 +7,11 @@
             <p class="transparent-text">Rempeyek renyah dipadukan dengan citarasa <br>khas bumbu
                 daerah yang menggugah selera.</p>
             <a href="{{ route('products') }}" id="pesan1" class="pesan btn btn-dark">{{ $button }}</a>
+            <br>
+            <img src="{{ asset('img_item_upload/pkacang.png') }}" class="mt-5" id="topImg" alt="">
         </div>
 
-        <img src="{{ asset('img_item_upload/pkacang.png') }}" class="p-4" id="topImg" alt="">
+
 
         <div class="container mb-3 p-4">
             <h2 class="fw-bold mt-4 mb-3">Varian rasa nabati</h2>

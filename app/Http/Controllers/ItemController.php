@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ItemController extends Controller
 {
@@ -14,7 +15,6 @@ class ItemController extends Controller
             'items' => $items,
         ]);
     }
-
     public function chatbot(Request $request){
         $message = strtolower($request->input('message'));
         $response = '';
@@ -108,5 +108,74 @@ class ItemController extends Controller
                 'max_price', 'min_price'
             )
         );
+    }
+
+    public function addToCart(Request $request){
+        $item_id = $request->input('item_id');
+        $berat_kg = $request->input('berat_kg');
+
+        // Validasi input
+
+
+        if(!$berat_kg){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Berat tidak valid'
+            ]);
+        }
+
+        if(!$item_id){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Item ID tidak valid'
+            ], 400);
+        }
+
+
+//        if (!$item_id || !$berat_kg) {
+//            return response()->json([
+//                'status' => 'error',
+//                'message' => 'Data tidak lengkap'
+//            ], 400);
+//        }
+
+        $item = Item::find($item_id);
+
+        if (!$item) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Item tidak ditemukan'
+            ], 404);
+        }
+
+        $cart = Session::get('cart', []);
+
+        $currCart = $cart[$item_id] ?? null;
+
+        // jika cart sudah ada, tambahkan berat
+        if ($currCart) {
+            $currCart['berat_kg'] += $berat_kg;
+        }
+        // jika belum ada, tambahkan ke cart
+        else {
+            $currCart = [
+                'id' => $item->id,
+                'nama' => $item->nama_peyek,
+                'topping' => $item->topping,
+                'harga' => $item->hrg_kiloan,
+                'gambar' => asset('img_item_upload/' . $item->gambar),
+                'berat_kg' => $berat_kg,
+            ];
+        }
+
+        $cart[$item_id] = $currCart;
+        Session::put('cart', $cart);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Item berhasil ditambahkan ke keranjang',
+            'cart' => $cart,
+            'cart_count' => count($cart)
+        ], 200);
     }
 }

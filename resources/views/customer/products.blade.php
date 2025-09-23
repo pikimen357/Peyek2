@@ -13,6 +13,7 @@
           <img src="{{ asset('img_item_upload/pkacang.png') }}" class="mt-1" id="topImg" data-id="pkcg" alt="">
         </div>
         <div class="col  mt-2" id="col2">
+
           <h5 id="Pkacang">Peyek Kacang</h5>
           <p id="hargaDisplay" style="font-size: 10px;"><strong>Rp50.000/kg</strong></p>
           <p id="toping" class="transparent-text">Toping kacang tanah</p>
@@ -25,9 +26,15 @@
               style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .5rem;">＋</button>
           </div>
           <p class="mt-2" id="harga" value="50000"></p>
+
+            {{-- Hidden untuk id nya--}}
+          <input type="hidden" id="idPeyekHidden" name="idPeyek" value="pkcg">
         </div>
 
-        <button class="btn btn-dark btn-sm mt-2 p-2 mb-2" id="checkout">Checkout</button>
+        <button type="button" class="btn btn-dark btn-sm mt-2 p-2 mb-2" id="checkout" >
+            Keranjang
+        </button>
+
       </div>
     </div>
 
@@ -102,6 +109,8 @@
             const topHargaDisplay = document.getElementById('hargaDisplay');
             const topTopping = document.getElementById('toping');
 
+            const idPeyekHidden = document.getElementById('idPeyekHidden');
+
             const varianItems = document.querySelectorAll('.varian-item');
 
             let jumlah = 0.5;
@@ -130,6 +139,8 @@
 
             updateHarga();
 
+            let selectedItemId = null;
+
             // Fungsi ganti varian utama saat diklik
             varianItems.forEach(item => {
               item.addEventListener('click', () => {
@@ -138,6 +149,7 @@
                 const topping = item.getAttribute('data-topping');
                 const gambar = item.getAttribute('data-gambar');
                 const idPeyek = item.getAttribute('data-id');
+                selectedItemId = idPeyek;
 
                 topImg.src = gambar;
                 topImg.dataset.id = idPeyek;
@@ -145,10 +157,75 @@
                 topHargaDisplay.innerHTML = `<strong>Rp${hargaBaru.toLocaleString('id-ID')}/kg</strong>`;
                 topTopping.textContent = `Toping ${topping}`;
 
+                idPeyekHidden.value = idPeyek;
+
                 hargaPerKg = hargaBaru;
                 harga.setAttribute("value", hargaBaru);
                 updateHarga();
               });
+            });
+
+            // Ganti bagian checkout event listener yang kosong dengan ini:
+            checkout.addEventListener('click', async () => {
+                // Ambil data item yang sedang dipilih
+                const itemId = topImg.dataset.id; // masih null
+                const beratKg = parseFloat(jumlahInput.value);
+
+                console.log( 'pkcg',itemId, beratKg);
+
+                // Validasi
+                if (!itemId || beratKg <= 0) {
+                    alert(`Silakan pilih produk dan jumlah yang valid ${itemId} ${beratKg}`);
+                    return;
+                }
+
+                // Disable button sementara
+                checkout.disabled = true;
+                checkout.innerHTML = 'Loading...';
+
+                try {
+                    const response = await fetch('/add-to-cart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }, body: JSON.stringify({
+                            item_id: itemId,
+                            berat_kg: beratKg
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    console.log(data);
+
+                    if (data.status === 'success') {
+                        // Tampilkan pesan sukses
+                        alert('Produk berhasil ditambahkan ke keranjang!');
+
+                        // Optional: Update cart counter di UI jika ada
+                        const cartCounter = document.getElementById('cart-counter');
+                        if (cartCounter) {
+                            cartCounter.textContent = data.cart_count;
+                        }
+
+                        // Optional: Reset jumlah ke default
+                        jumlah = 0.5;
+                        jumlahInput.value = jumlah;
+                        updateHarga();
+
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menambahkan ke keranjang');
+                } finally {
+                    // Enable button kembali
+                    checkout.disabled = false;
+                    checkout.innerHTML = 'Keranjang';
+                }
             });
 
             // Chatbot functionality
