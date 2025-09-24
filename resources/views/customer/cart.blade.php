@@ -38,7 +38,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             loadCartItems();
-            setupSearchFilter();
+            setupGlobalEventListeners(); // Pindah ke global event listeners
         });
 
         let cartData = [];
@@ -80,19 +80,16 @@
             }
 
             emptyCart.style.display = 'none';
-            clearCartBtn.style.display = 'inline-block'; // Show clear cart button
+            clearCartBtn.style.display = 'inline-block';
             container.innerHTML = '';
 
             Object.values(items).forEach(item => {
                 const cartItemHTML = createCartItemHTML(item);
                 container.appendChild(cartItemHTML);
             });
-
-            // Setup event listeners for quantity controls
-            setupQuantityControls();
         }
 
-        // Create cart item HTML element
+        // Create cart item HTML element - FIXED
         function createCartItemHTML(item) {
             const cartItem = document.createElement('div');
             cartItem.className = 'cart-item';
@@ -109,9 +106,9 @@
                         <div class="quantity-controls">
                             <p class="quantity-label">Jumlah (kg):</p>
                             <div class="quantity-input-group">
-                                <button id="plusBtn" type="button" class="btn-quantity minus-btn" data-id="${item.id}">−</button>
+                                <button type="button" class="btn-quantity minus-btn" data-id="${item.id}">−</button>
                                 <input type="text" class="quantity-input" value="${item.berat_kg}" data-id="${item.id}" readonly>
-                                <button id="minBtn" type="button" class="btn-quantity plus-btn" data-id="${item.id}">+</button>
+                                <button type="button" class="btn-quantity plus-btn" data-id="${item.id}">+</button>
                             </div>
                         </div>
                     </div>
@@ -122,21 +119,20 @@
             return cartItem;
         }
 
-        // Setup quantity control event listeners
-        function setupQuantityControls() {
+        // Setup global event listeners using event delegation - FIXED
+        function setupGlobalEventListeners() {
+            const container = document.getElementById('cartItemsContainer');
 
-            const plusBtn = document.getElementById('plusBtn');
-            const minBtn = document.getElementById('minBtn');
-
-            plusBtn.addEventListener('click', function() {
-                const itemId = this.dataset.id;
-                updateQuantity(itemId, 0.25);
-            })
-
-            minBtn.addEventListener('click', function() {
-                const itemId = this.dataset.id;
-                updateQuantity(itemId, -0.25);
-            })
+            // Event delegation - satu listener untuk semua button
+            container.addEventListener('click', function(event) {
+                if (event.target.classList.contains('plus-btn')) {
+                    const itemId = event.target.dataset.id;
+                    updateQuantity(itemId, 0.25);
+                } else if (event.target.classList.contains('minus-btn')) {
+                    const itemId = event.target.dataset.id;
+                    updateQuantity(itemId, -0.25);
+                }
+            });
         }
 
         // Update item quantity
@@ -248,7 +244,6 @@
                 if (data.status === 'success') {
                     cartData = {};
                     showEmptyCart();
-                    // Hide clear cart button
                     document.getElementById('clearCartBtn').style.display = 'none';
                     alert('Keranjang berhasil dikosongkan');
                 } else {
@@ -265,10 +260,7 @@
             const item = cartData[itemId];
             if (!item) return;
 
-            // Implement checkout logic here
             alert(`Checkout ${item.nama} - ${item.berat_kg}kg`);
-            // You can redirect to checkout page or open checkout modal
-            // window.location.href = `/checkout?item=${itemId}`;
         }
 
         // Show empty cart message

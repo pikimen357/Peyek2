@@ -10,13 +10,14 @@
     <div class="d-flex justify-content-center align-items-center container" id="orderCont">
       <div class="box-wrapper row gap-1 mt-2" style="width: 380px;">
         <div class="col  mt-2" style="margin-right: 8px;">
-          <img src="{{ asset('img_item_upload/pkacang.png') }}" class="mt-1" id="topImg" data-id="pkcg" alt="">
+          <img src="{{ asset('img_item_upload/' . $defaultItem->gambar) }}" class="mt-1" id="topImg" data-id="{{ $defaultItem->id }}" alt="">
         </div>
         <div class="col  mt-2" id="col2">
 
-          <h5 id="Pkacang">Peyek Kacang</h5>
-          <p id="hargaDisplay" style="font-size: 10px;"><strong>Rp50.000/kg</strong></p>
-          <p id="toping" class="transparent-text">Toping kacang tanah</p>
+          <h5 id="Pkacang">{{ $defaultItem->nama_peyek }}</h5>
+          <p id="hargaDisplay" style="font-size: 10px;"><strong>Rp{{ number_format($defaultItem->hrg_kiloan, 0, ',', '.') }}/kg
+              </strong></p>
+          <p id="toping" class="transparent-text">Topping {{ $defaultItem->topping }}</p>
           <label for="jumlah" style="font-size: 10px;">Jumlah (kg):</label>
           <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
             <button type="button" class="btn btn-outline-dark" id="minus"
@@ -25,10 +26,10 @@
             <button type="button" class="btn btn-outline-dark" id="plus"
               style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .5rem;">＋</button>
           </div>
-          <p class="mt-2" id="harga" value="50000"></p>
+          <p class="mt-2" id="harga" value="{{ $defaultItem->hrg_kiloan }}"></p>
 
             {{-- Hidden untuk id nya--}}
-          <input type="hidden" id="idPeyekHidden" name="idPeyek" value="pkcg">
+          <input type="hidden" id="idPeyekHidden" name="idPeyek" value="{{ $defaultItem->id }}">
         </div>
 
         <button type="button" class="btn btn-dark btn-sm mt-2 p-2 mb-2" id="checkout" >
@@ -114,7 +115,7 @@
             const varianItems = document.querySelectorAll('.varian-item');
 
             let jumlah = 0.5;
-            let hargaPerKg = 50000;
+            let hargaPerKg = {{ $defaultItem->hrg_kiloan }};
 
             function updateHarga() {
               const total = jumlah * hargaPerKg;
@@ -171,7 +172,19 @@
                 const itemId = topImg.dataset.id; // masih null
                 const beratKg = parseFloat(jumlahInput.value);
 
-                console.log( 'pkcg',itemId, beratKg);
+                const hiddenId = document.getElementById("idPeyekHidden").value;
+
+                const session_data = {
+                    item_id : document.getElementById("topImg").dataset.id,
+                    berat_kg: parseFloat(document.getElementById("jumlah").value)
+                }
+
+                    // Debug log untuk melihat semua nilai
+                    console.log('Debug Values:');
+                    console.log('topImg.dataset.id:', itemId);
+                    console.log('idPeyekHidden.value:', hiddenId);
+                    console.log('beratKg:', beratKg);
+
 
                 // Validasi
                 if (!itemId || beratKg <= 0) {
@@ -184,15 +197,12 @@
                 checkout.innerHTML = 'Loading...';
 
                 try {
-                    const response = await fetch('/add-to-cart', {
+                    const response = await fetch('{{ route('cart.add') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }, body: JSON.stringify({
-                            item_id: itemId,
-                            berat_kg: beratKg
-                        })
+                        }, body: JSON.stringify(session_data)
                     });
 
                     const data = await response.json();

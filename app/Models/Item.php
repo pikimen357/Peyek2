@@ -10,7 +10,23 @@ class Item extends Model
 {
     use SoftDeletes, HasFactory;
 
+    // 1. Tentukan nama tabel jika berbeda dari plural model name
+        protected $table = 'items'; // sesuaikan dengan nama tabel Anda
+
+    // 2. PENTING: Tentukan primary key yang custom
+        protected $primaryKey = 'id';
+
+    // 3. SANGAT PENTING: Set ke false karena primary key bukan auto-increment integer
+    public $incrementing = false;
+
+    // 4. PENTING: Tentukan tipe data primary key
+    protected $keyType = 'string';
+
+    // 5. Jika Anda tidak menggunakan timestamps Laravel, set false
+    public $timestamps = true;
+
     protected $fillable = [
+        'id',
         'nama_peyek',
         'topping',
         'hrg_kiloan',

@@ -11,8 +11,13 @@ class ItemController extends Controller
     public function index(){
         $items = Item::all();
 
+        $defaultItem = Item::where('id', 'pkcg')->first() ??
+                      Item::first() ??
+                      null;
+
         return view('customer.products', [
             'items' => $items,
+            'defaultItem' => $defaultItem
         ]);
     }
     public function chatbot(Request $request){
@@ -111,12 +116,10 @@ class ItemController extends Controller
     }
 
     public function addToCart(Request $request){
-        $item_id = $request->input('item_id');
-        $berat_kg = $request->input('berat_kg');
+        $item_id = $request->item_id;
+        $berat_kg = $request->berat_kg;
 
         // Validasi input
-
-
         if(!$berat_kg){
             return response()->json([
                 'status' => 'error',
