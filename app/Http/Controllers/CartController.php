@@ -17,9 +17,22 @@ class CartController extends Controller
     // Method untuk menampilkan halaman cart
     public function showCart()
     {
-        $cart = Session::get('cart');
+        $cart = Session::get('cart', []);
+        $total = 0;
 
-        return view('customer.cart', compact('cart'));
+        if ($cart) {
+            // Hitung total harga dari semua item di cart
+            foreach ($cart as $item) {
+                // Asumsi struktur item: ['harga' => harga_per_kg, 'berat_kg' => berat]
+                // Sesuaikan dengan struktur data cart Anda
+                if (isset($item['harga']) && isset($item['berat_kg'])) {
+                    $total += $item['harga'] * $item['berat_kg'];
+                }
+            }
+        }
+
+        return view('customer.cart', compact('cart', 'total'));
+
     }
 
     // Method untuk mendapatkan items cart via AJAX

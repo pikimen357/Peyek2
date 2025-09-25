@@ -7,15 +7,24 @@
 @endsection
 
 @section('content')
-    <div class="cart-container">
+    <div class="cart-container p-3">
         <div class="cart-header" >
-            <h1 class="cart-title">Keranjang</h1>
+            <h1 class="cart-title fs-3">Keranjang</h1>
         </div>
 
         <!-- Cart Items Container -->
         <div id="cartItemsContainer">
             <!-- Cart items will be loaded here -->
         </div>
+
+        <div id="sumPrice" class="mb-5 mt-3">
+            <div class="cart-item-content">
+                <div class="cart-item-details">
+                    <p id="totalPriceText" class="fs-5">Total Belanja : Rp0</p>
+                </div>
+            </div>
+        </div>
+
 
         <div class="cart-footer">
                         <!-- Clear Cart Button -->
@@ -38,7 +47,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             loadCartItems();
-            setupGlobalEventListeners(); // Pindah ke global event listeners
+            setupGlobalEventListeners();
         });
 
         let cartData = [];
@@ -59,6 +68,7 @@
                 if (data.status === 'success') {
                     cartData = data.cart;
                     displayCartItems(cartData);
+                    updateTotalPrice(); // hitung total setelah load
                 } else {
                     showEmptyCart();
                 }
@@ -101,29 +111,33 @@
                 <div class="cart-item-content">
                     <img src="${item.gambar}" alt="${item.nama}" class="cart-item-image">
                     <div class="cart-item-details">
-                        <h3 class="cart-item-name">${item.nama}</h3>
-                        <p class="cart-item-total">Total: Rp${totalPrice.toLocaleString('id-ID')}</p>
-                        <div class="quantity-controls">
-                            <p class="quantity-label">Jumlah (kg):</p>
+                        <h3 class="cart-item-name" style="font-size: 16px">${item.nama}</h3>
+                        <p class="cart-item-total"  style="font-size: 14px">Total: Rp${totalPrice.toLocaleString('id-ID')}</p>
+                        <div class="quantity-controls" >
+                            <p class="quantity-label"  style="font-size: 12px">Jumlah (kg):</p>
                             <div class="quantity-input-group">
-                                <button type="button" class="btn-quantity minus-btn" data-id="${item.id}">−</button>
-                                <input type="text" class="quantity-input" value="${item.berat_kg}" data-id="${item.id}" readonly>
-                                <button type="button" class="btn-quantity plus-btn" data-id="${item.id}">+</button>
+                                <button type="button" class="btn-quantity minus-btn"
+                                        style="font-size: 10px" data-id="${item.id}">−</button>
+                                <input type="text" class="quantity-input" value="${item.berat_kg}"
+                                        data-id="${item.id}" readonly>
+                                <button type="button" class="btn-quantity plus-btn"
+                                        data-id="${item.id}">+</button>
                             </div>
                         </div>
                     </div>
-                    <button class="checkout-btn" onclick="checkoutItem('${item.id}')">Checkout</button>
+                </div>
+                <div class="cart-item-content mt-3 d-flex justify-content-end">
+                   <button class="checkout-btn" onclick="checkoutItem('${item.id}')">Checkout</button>
                 </div>
             `;
 
             return cartItem;
         }
 
-        // Setup global event listeners using event delegation - FIXED
+        // Setup global event listeners
         function setupGlobalEventListeners() {
             const container = document.getElementById('cartItemsContainer');
 
-            // Event delegation - satu listener untuk semua button
             container.addEventListener('click', function(event) {
                 if (event.target.classList.contains('plus-btn')) {
                     const itemId = event.target.dataset.id;
@@ -172,6 +186,7 @@
                 if (data.status === 'success') {
                     cartData = data.cart;
                     updateItemDisplay(itemId, newQuantity);
+                    updateTotalPrice(); // hitung ulang setelah update qty
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -181,7 +196,7 @@
             }
         }
 
-        // Update item display after quantity change
+        // Update item display
         function updateItemDisplay(itemId, newQuantity) {
             const quantityInput = document.querySelector(`input[data-id="${itemId}"]`);
             const cartItem = document.querySelector(`[data-item-id="${itemId}"]`);
@@ -214,7 +229,8 @@
 
                 if (data.status === 'success') {
                     cartData = data.cart;
-                    loadCartItems(); // Reload to refresh display
+                    loadCartItems();
+                    updateTotalPrice(); // hitung ulang setelah hapus
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -245,7 +261,9 @@
                     cartData = {};
                     showEmptyCart();
                     document.getElementById('clearCartBtn').style.display = 'none';
+                    updateTotalPrice(); // set ke 0
                     alert('Keranjang berhasil dikosongkan');
+                    location.reload();
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -259,7 +277,6 @@
         function checkoutItem(itemId) {
             const item = cartData[itemId];
             if (!item) return;
-
             alert(`Checkout ${item.nama} - ${item.berat_kg}kg`);
         }
 
@@ -268,7 +285,22 @@
             document.getElementById('cartItemsContainer').innerHTML = '';
             document.getElementById('emptyCart').style.display = 'block';
             document.getElementById('clearCartBtn').style.display = 'none';
+            document.getElementById('totalPriceText').textContent = "Total Belanja : Rp0";
         }
 
+        // Hitung total semua item
+        function updateTotalPrice() {
+            let total = 0;
+
+            Object.values(cartData).forEach(item => {
+                total += item.berat_kg * item.harga;
+            });
+
+            const totalPriceElement = document.getElementById('totalPriceText');
+            if (totalPriceElement) {
+                totalPriceElement.textContent = `Total Belanja : Rp${total.toLocaleString('id-ID')}`;
+            }
+        }
     </script>
 @endsection
+

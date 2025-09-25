@@ -14,8 +14,20 @@
                 <a class="nav-link" href="#">Pesanan Anda</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link d-inline text-white bi bi-cart fs-3"
-                   href="{{ route('cart.show') }}"></a>
+                <a href="{{ route('cart.show') }}" class="nav-link position-relative text-white bi bi-cart fs-4">
+                    @php
+                        $cart = session('cart');
+                        $cartCount = is_array($cart) ? count($cart) : 0;
+                    @endphp
+
+                    @if($cartCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle
+                                    badge rounded-pill bg-danger w-5">
+                        <span style="font-size: 11px;">{{ $cartCount }}</span>
+                        <span class="visually-hidden">items in cart</span>
+                        </span>
+                    @endif
+                </a>
             </li>
         </ul>
     </div>

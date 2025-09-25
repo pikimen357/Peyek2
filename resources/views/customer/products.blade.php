@@ -224,6 +224,8 @@
                         jumlahInput.value = jumlah;
                         updateHarga();
 
+                        location.reload();
+
                     } else {
                         alert('Error: ' + data.message);
                     }
