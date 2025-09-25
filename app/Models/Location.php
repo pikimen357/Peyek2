@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
+
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     protected $fillable = [
         'desa',
         'kecamatan',
