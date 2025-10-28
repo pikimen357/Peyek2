@@ -45,7 +45,12 @@ Route::group(['controller' => CartController::class], function () {
     Route::post('/clear-cart', 'clearCart')->name('cart.clear');
 });
 
-Route::get('/checkout', [CheckoutController::class, 'index'])
+Route::group(['controller' => CheckoutController::class], function () {
+
+    Route::get('/checkout', 'index')
     ->name('checkout');
+
+});
+
 
 

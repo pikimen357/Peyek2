@@ -33,7 +33,7 @@
                     <!-- Product List Section -->
                     <h4 class="mb-3 fs-6 fw-bold">Produk Dipesan</h4>
                     <div class="product-list-section mb-5 p-2">
-                        @foreach($cartItems as $item)
+                        @foreach($items as $item)
                             @php
                                 $subtotal = $item['harga'] * $item['berat_kg'];
                             @endphp
@@ -52,7 +52,7 @@
                                             {{ $item['topping'] }}
                                         </p>
                                         <p class="product-price fw-bold mb-0">
-                                            Rp{{ number_format($item['harga'], 0, ',', '.') }}
+                                            Rp{{ number_format($item['harga'] * $item['berat_kg'], 0, ',', '.') }}
                                         </p>
                                     </div>
                                 </div>
@@ -84,9 +84,9 @@
                                     <label class="form-label" for="kecamatan">Kecamatan</label>
                                     <select name="kecamatan" id="kecamatan" class="form-select" required>
                                         <option value="">Pilih Kecamatan</option>
-                                        <option value="Kismantoro">Kismantoro</option>
-                                        <option value="Purwantoro">Purwantoro</option>
-                                        <option value="Biting">Biting</option>
+                                        @foreach($locations->groupBy('kecamatan') as $kec => $group)
+                                            <option value="{{ $kec }}">{{ $kec }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -94,11 +94,14 @@
                                     <label class="form-label" for="desa">Desa</label>
                                     <select name="desa" id="desa" class="form-select" required>
                                         <option value="">Pilih Desa</option>
-                                        <option value="Pucung">Pucung</option>
-                                        <option value="Bugelan">Bugelan</option>
+                                        @foreach($locations->groupBy('desa') as $des => $des)
+                                                <option value="{{ $des }}">{{ $des }}</option>
+                                        @endforeach
                                     </select>
+
                                 </div>
                             </div>
+
 
                             <div class="mb-3 p-2">
                                 <label for="alamat" class="form-label">Detail Alamat</label>
@@ -183,32 +186,48 @@
     </main>
 @endsection
 
-@section('scripts')
+@section('script')
 <script>
-    // Optional: Dynamic Desa based on Kecamatan
-    document.getElementById('kecamatan').addEventListener('change', function() {
-        const desaSelect = document.getElementById('desa');
-        const kecamatan = this.value;
+    const locations = <?php echo json_encode($locations); ?>;
 
-        // Clear current options
+    console.log('locations  : ', locations);
+
+    const kecamatanSelect = document.getElementById('kecamatan');
+    const desaSelect = document.getElementById('desa');
+
+    if (!kecamatanSelect || !desaSelect) {
+        console.error('Dropdown elements not found!');
+    }
+
+    kecamatanSelect.addEventListener('change', function() {
+        const selectedKecamatan = this.value;
+
+        // Reset dropdown desa
         desaSelect.innerHTML = '<option value="">Pilih Desa</option>';
+        desaSelect.disabled = true;
 
-        // Define desa options per kecamatan
-        const desaOptions = {
-            'Kismantoro': ['Pucung', 'Wonorejo', 'Kismantoro'],
-            'Purwantoro': ['Bugelan', 'Purwantoro', 'Girimargo'],
-            'Biting': ['Biting', 'Sidoharjo', 'Karangsari']
-        };
-
-        // Populate desa options
-        if (desaOptions[kecamatan]) {
-            desaOptions[kecamatan].forEach(desa => {
-                const option = document.createElement('option');
-                option.value = desa;
-                option.textContent = desa;
-                desaSelect.appendChild(option);
-            });
+        if (!selectedKecamatan) {
+            return;
         }
+
+        // Filter dan tampilkan desa
+        const filteredDesa = locations.filter(loc => {
+            return loc.kecamatan === selectedKecamatan;
+        });
+
+        // Hilangkan duplikat desa (jika ada)
+        const uniqueDesa = [...new Set(filteredDesa.map(location => location.desa))];
+
+            // Populate dropdown desa
+        uniqueDesa.forEach(desa => {
+            const option = document.createElement('option');
+            option.value = desa;
+            option.textContent = desa;
+            desaSelect.appendChild(option);
+        });
+
+        desaSelect.disabled = false;
     });
 </script>
 @endsection
+
