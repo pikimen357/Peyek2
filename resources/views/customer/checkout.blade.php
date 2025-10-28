@@ -27,7 +27,8 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="order-container p-4">
-                    <h2 class="text-center mb-5 mt-3 fs-5 fw-bold">DETAIL PEMESANAN</h2>
+                    <h2 id="detailPemesanan" class="text-center mb-5 mt-3 fs-5 fw-bold">
+                        DETAIL PEMESANAN</h2>
 
                     <!-- Product List Section -->
                     <h4 class="mb-3 fs-6 fw-bold">Produk Dipesan</h4>
@@ -36,7 +37,7 @@
                             @php
                                 $subtotal = $item['harga'] * $item['berat_kg'];
                             @endphp
-                            <div class="order-card mb-3 rounded p-3">
+                            <div class="order-card mb-3 rounded p-3 ">
                                 <div class="row align-items-center">
                                     <div class="col-md-3 col-3 mb-2 mb-md-0">
                                         <img src="{{ asset($item['gambar']) }}"
