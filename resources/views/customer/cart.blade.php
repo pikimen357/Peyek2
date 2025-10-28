@@ -27,6 +27,10 @@
 
 
         <div class="cart-footer">
+            <button id="checkoutBtn" class="checkout-btn p-2 mb-3 w-100 text-white"
+                    style="display: none; color: #795205;" onclick="checkoutAll()">
+                Checkout Semua
+            </button>
                         <!-- Clear Cart Button -->
             <button id="clearCartBtn" class="clear-cart-btn btn btn-danger p-2 w-100"
                     style="display: none;" onclick="clearCart()">
@@ -83,6 +87,7 @@
             const container = document.getElementById('cartItemsContainer');
             const emptyCart = document.getElementById('emptyCart');
             const clearCartBtn = document.getElementById('clearCartBtn');
+            const checkoutBtn = document.getElementById('checkoutBtn');
 
             if (!items || Object.keys(items).length === 0) {
                 showEmptyCart();
@@ -91,6 +96,7 @@
 
             emptyCart.style.display = 'none';
             clearCartBtn.style.display = 'inline-block';
+            checkoutBtn.style.display = 'inline-block';
             container.innerHTML = '';
 
             Object.values(items).forEach(item => {
@@ -273,11 +279,33 @@
             }
         }
 
-        // Checkout specific item
+        // Eksekusi Checkout
         function checkoutItem(itemId) {
             const item = cartData[itemId];
             if (!item) return;
-            alert(`Checkout ${item.nama} - ${item.berat_kg}kg`);
+            alert(`Checkout ${item.nama} (${item.berat_kg}kg)`);
+        }
+
+        function checkoutAll() {
+            if (!cartData || Object.keys(cartData).length === 0) return;
+
+            // const barang = Object.values(cartData)
+            //     .map(item => `${item.id} ${item.berat_kg}`);
+                            // .join('\n ');
+
+            const barang = Object.values(cartData);
+            const barangs = barang.map(item => {
+                return {
+                    id: item.id,
+                    berat_kg: item.berat_kg
+                };
+            });
+
+            if (confirm(`Checkout semua item?`)) {
+                console.log(barangs);
+                window.location.href = "{{ route('checkout') }}";
+
+            }
         }
 
         // Show empty cart message
