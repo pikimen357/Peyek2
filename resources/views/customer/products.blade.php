@@ -8,7 +8,7 @@
 @section('content')
     <main>
     <div class="d-flex justify-content-center align-items-center container" id="orderCont">
-      <div class="box-wrapper row gap-1 mt-2" style="width: 380px;">
+      <div class="box-wrapper row gap-1 mt-2" style="width: 370px;">
         <div class="col  mt-2" style="margin-right: 8px;">
           <img src="{{ asset('img_item_upload/' . $defaultItem->gambar) }}" class="mt-1" id="topImg" data-id="{{ $defaultItem->id }}" alt="">
         </div>
@@ -43,7 +43,8 @@
       <div class="row w-100 mb-5" style="max-width: 600px;">
         <h2 id="varianLain" class="mb-4 fw-bold fs-3">Varian Lainnya</h2>
           @foreach($items as $item)
-              <div class="col varian-item p-3 mb-4" style="line-height: 22px; cursor: pointer;"
+              <div class="col varian-item p-3 mb-4"
+                   style="line-height: 22px; cursor: pointer;"
                    data-id="{{ $item->id }}"
                    data-nama="{{ $item->nama_peyek }}"
                    data-harga="{{ $item->hrg_kiloan }}"

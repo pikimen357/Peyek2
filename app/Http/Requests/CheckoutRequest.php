@@ -28,7 +28,7 @@ class CheckoutRequest extends FormRequest
             'desa' => 'required|string|max:100',
             'alamat' => 'nullable|string',
             'catatan' => 'nullable|string',
-            'payment_method' => 'required|in:' . implode(',', PaymentMethod::values())
+            'payment_method' => 'required|in:cash,qris'
         ];
     }
 

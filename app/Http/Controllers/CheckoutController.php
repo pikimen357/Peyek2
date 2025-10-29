@@ -50,7 +50,7 @@ class CheckoutController extends Controller
 
         // Retrieve all prices from the database in a single query
         $prices = Item::whereIn('id', $itemIds)
-            ->where('is_active', true)
+            ->where('is_available', true)
             ->pluck('hrg_kiloan', 'id'); // [id => hrg_kiloan]
 
         // Calculate the total and prepare the itemDetails
@@ -59,13 +59,13 @@ class CheckoutController extends Controller
 
         foreach($cart as $item){
             $price = $prices->get($item['id']);; // coba coba
-            $subtotal = $price * $item['qty'];
+            $subtotal = $price * $item['berat_kg'];
             $totalAmount += $subtotal;
 
             $itemDetails[] = [
                 'id' => $item['id'],
                 'price' => (int) $price,
-                'qty' => $item['qty'],
+                'berat_kg' => $item['berat_kg'],
                 'nama_peyek' => substr($item['nama'], 0, 50),
             ];
         }
