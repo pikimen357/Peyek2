@@ -63,19 +63,32 @@
                     <!-- Form Section -->
                     <div class="form-section mb-5">
                         <h4 class="mb-3 fs-6 fw-bold">Informasi Pengiriman</h4>
-                        <form method="POST" action="">
+                        <form method="POST" action="{{ route('checkout.store') }}">
+                            @csrf
                             <div class="row mb-3 p-2">
                                 <div class="col-md-6 mb-3 mb-md-0">
-                                    <label for="pemesan" class="form-label">Pemesan</label>
+                                    <label for="pemesan" class="form-label @error('nama') is-invalid @enderror">
+                                        Pemesan</label>
                                     <input type="text" class="form-control"
-                                           id="pemesan" name="pemesan"
-                                           value="Farhan" required>
+                                           id="pemesan" name="nama"
+                                           value="{{ old('nama') }}" required>
+                                            @error('nama')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="telepon" class="form-label">Telepon (WhatsApp)</label>
+                                    <label for="telepon" class="form-label @error('telepon') is-invalid @enderror">
+                                        Telepon (WhatsApp)</label>
                                     <input type="text" class="form-control"
                                            id="telepon" name="telepon"
-                                           value="082223190195" required>
+                                           value="{{ old('telepon') }}" required>
+                                            @error('nama')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                 </div>
                             </div>
 
@@ -88,17 +101,26 @@
                                             <option value="{{ $kec }}">{{ $kec }}</option>
                                         @endforeach
                                     </select>
+                                     @error('kecamatan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label" for="desa">Desa</label>
                                     <select name="desa" id="desa" class="form-select" required>
                                         <option value="">Pilih Desa</option>
-                                        @foreach($locations->groupBy('desa') as $des => $des)
-                                                <option value="{{ $des }}">{{ $des }}</option>
-                                        @endforeach
+{{--                                        @foreach($locations->groupBy('desa') as $des => $des)--}}
+{{--                                                <option value="{{ $des }}">{{ $des }}</option>--}}
+{{--                                        @endforeach--}}
                                     </select>
-
+                                     @error('desa')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                     @enderror
                                 </div>
                             </div>
 
@@ -113,7 +135,7 @@
                             <div class="mb-4 p-2">
                                 <label for="pesan" class="form-label">Pesan Khusus</label>
                                 <textarea class="form-control"
-                                          id="pesan" name="pesan" rows="3"
+                                          id="pesan" name="catatan" rows="3"
                                           placeholder="Contoh: Mohon peyek dikemas rapat"></textarea>
                             </div>
 
@@ -122,7 +144,7 @@
                                 <div class="payment-methods">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio" name="payment" id="gopay" value="gopay"
+                                               type="radio" name="payment_method" id="gopay" value="gopay"
                                                checked required>
                                         <label class="form-check-label" for="gopay">
                                             <img src="{{ asset('img_item_upload/gopay.png') }}" alt="GoPay" class="payment-logo">
@@ -130,14 +152,14 @@
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio" name="payment" id="qris" value="qris">
+                                               type="radio" name="payment_method" id="qris" value="qris">
                                         <label class="form-check-label" for="qris">
                                             <img src="{{ asset('img_item_upload/qris.png') }}" alt="QRIS" class="payment-logo">
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                               type="radio" name="payment" id="cod" value="cod">
+                                               type="radio" name="payment_method" id="cod" value="cash">
                                         <label class="form-check-label" for="cod">
                                             <img src="{{ asset('img_item_upload/cod.png') }}" alt="COD" class="payment-logo">
                                         </label>
@@ -194,6 +216,28 @@
 
     const kecamatanSelect = document.getElementById('kecamatan');
     const desaSelect = document.getElementById('desa');
+
+    // PERBAIKAN: Tambahkan quotes dan handle null value
+    const oldKecamatan = '<?php echo old('kecamatan', '') ?>';
+    const oldDesa = '<?php echo old('desa', '') ?>';
+
+    console.log('Old Kecamatan:', oldKecamatan);
+    console.log('Old Desa:', oldDesa);
+
+    // Jika ada old value untuk kecamatan, set selected
+    if(oldKecamatan){
+        kecamatanSelect.value = oldKecamatan;
+
+        // Trigger change event untuk memuat data
+        kecamatanSelect.dispatchEvent(new Event('change'));
+
+        // set old value untuk desa setelah dropdown terisi
+        setTimeout(() =>{
+            if(oldDesa) {
+                desaSelect.value = oldDesa;
+            }
+        }, 100)
+    }
 
     if (!kecamatanSelect || !desaSelect) {
         console.error('Dropdown elements not found!');

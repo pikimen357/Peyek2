@@ -30,4 +30,12 @@ class Location extends Model
     public function orders(){
         return $this->hasMany(Order::class, 'location_id');
     }
+
+    /**
+     * Relasi ke model User
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_lokasi');
+    }
 }

@@ -13,14 +13,22 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'nama',
+        'telepon',
         'password',
+        'id_lokasi',
+        'alamat',
     ];
 
     /**
@@ -41,12 +49,23 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
-    public function orders(){
+    /**
+     * Relasi ke model Order
+     */
+    public function orders()
+    {
         return $this->hasMany(Order::class, 'user_id');
+    }
+
+    /**
+     * Relasi ke model Location
+     */
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'id_lokasi');
     }
 }

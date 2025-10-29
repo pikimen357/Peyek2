@@ -50,6 +50,8 @@ Route::group(['controller' => CheckoutController::class], function () {
     Route::get('/checkout', 'index')
     ->name('checkout');
 
+    Route::post('/checkout', 'store')
+        ->name('checkout.store');
 });
 
 

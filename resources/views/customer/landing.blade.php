@@ -2,6 +2,20 @@
 
 @section('content')
     <main >
+        {{-- Success Alert --}}
+        @if(session('success'))
+        <div class="container mt-4">
+            <div class="alert alert-dismissible fade show" role="alert"
+                 id="alert-Checkout">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span class="flex-grow-1">{{ session('success') }}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="container mb-2 p-4">
             <h1 class="fw-bold mt-4">Peyek Kriuk Pawon Eny</h1>
             <p class="transparent-text">Rempeyek renyah dipadukan dengan citarasa <br>khas bumbu
@@ -10,7 +24,6 @@
             <br>
             <img src="{{ asset('img_item_upload/pkacang.png') }}" class="mt-5" id="topImg" alt="">
         </div>
-
 
 
         <div class="container mb-3 p-4">

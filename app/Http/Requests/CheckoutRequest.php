@@ -22,7 +22,29 @@ class CheckoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama' => 'required|string|max:100',
+            'telepon' => 'required|string|max:50',
+            'kecamatan' => 'required|string|max:100',
+            'desa' => 'required|string|max:100',
+            'alamat' => 'nullable|string',
+            'catatan' => 'nullable|string',
+            'payment_method' => 'required|in:' . implode(',', PaymentMethod::values())
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'nama.required' => 'Nama harus diisi',
+            'telepon.required' => 'Telepon harus diisi',
+            'kecamatan.required' => 'Kecamatan harus dipilih',
+            'desa.required' => 'Desa harus dipilih',
+            'alamat.string' => 'Alamat harus berupa teks',
+            'catatan.string' => 'Catatan harus berupa teks',
+
+            'payment_method.required' => 'Metode pembayaran harus dipilih',
+            'payment_method.in' => 'Metode pembayaran tidak valid',
+        ];
+    }
+
 }
