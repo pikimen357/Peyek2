@@ -14,7 +14,7 @@
                 <a class="nav-link" href="#">Pesanan Anda</a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('cart.show') }}" class="nav-link position-relative text-white bi bi-cart fs-4">
+                <a href="{{ route('cart2.show') }}" class="nav-link position-relative text-white bi bi-cart fs-4">
                     @php
                         $cart = session('cart');
                         $cartCount = is_array($cart) ? count($cart) : 0;

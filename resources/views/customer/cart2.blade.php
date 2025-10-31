@@ -6,15 +6,8 @@
 @endsection
 
 @section('content')
-    <div class="cart-container p-3" style="margin-top: 120px;">
+    <div class="cart-container" style="margin-top: 120px;">
         <h1 class="cart-title text-black mb-4">Keranjang Belanja</h1>
-
-        <div class="cart-header">
-            <div class="search-box">
-                <input type="text" placeholder="Cari barang" class="search-input">
-                <button class="search-btn">🔍</button>
-            </div>
-        </div>
 
         <!-- Cart Items Container -->
         <div id="cartItemsContainer">
@@ -22,9 +15,11 @@
         </div>
 
         <!-- Total Price Section -->
-        <div id="sumPrice" class="total-section mt-5">
+        <div id="sumPrice" class="total-section mt-5 p-4">
             <div class="total-content">
-                <p id="totalPriceText" class="total-text " style="">Total : Rp0</p>
+                <p id="totalPriceText" class="total-text"
+                   style="">Total : Rp0 </p>
+                <hr id="garisTotal" class="mb-1 mt-2">
             </div>
         </div>
 
@@ -125,15 +120,15 @@
 
                     <div class="item-quantity-section">
                         <span class="quantity-label-text">Jumlah (kg):</span>
-                        <div class="quantity-controls-wrapper">
+                        <div class="quantity-controls-wrapper mt-2">
                             <button type="button" class="btn-qty minus-btn" data-id="${item.id}">−</button>
                             <input type="text" class="qty-input" value="${item.berat_kg}" data-id="${item.id}" readonly>
                             <button type="button" class="btn-qty plus-btn" data-id="${item.id}">+</button>
                         </div>
-                        <button class="btn-view-detail" onclick="checkoutItem('${item.id}')">👁</button>
                     </div>
+                    <button class="btn-checkout-item mt-2"
+                            onclick="checkoutItem('${item.id}')">Checkout</button>
 
-                    <button class="btn-checkout-item" onclick="checkoutItem('${item.id}')">Checkout</button>
                 </div>
             `;
 
