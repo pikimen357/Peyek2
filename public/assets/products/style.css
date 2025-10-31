@@ -306,8 +306,8 @@ main {
         @media (max-width: 768px) {
             .chatbot-modal {
                 /* width: calc(100vw - 40px); Full width minus margin di mobile */
-                width: 390px;
-                height: 400px;
+                width: 330px;
+                height: 450px;
                 right: 20px;
                 /*left: 20px;*/
             }
@@ -315,7 +315,7 @@ main {
 
         @media (min-width: 769px) {
             .chatbot-modal {
-                max-width: 320px; /* Batas maksimal lebar di desktop */
-                min-width: 250px; /* Batas minimal lebar di desktop */
+                width: 280px; /* Batas maksimal lebar di desktop */
+                height: 450px;
             }
         }

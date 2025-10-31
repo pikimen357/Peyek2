@@ -18,7 +18,7 @@
         <div id="sumPrice" class="total-section mt-5 p-4">
             <div class="total-content">
                 <p id="totalPriceText" class="total-text"
-                   style="">Total : Rp0 </p>
+                   style="">Total (Keranjang): Rp0 </p>
                 <hr id="garisTotal" class="mb-1 mt-2">
             </div>
         </div>
@@ -116,7 +116,7 @@
                 </div>
                 <div class="item-details-wrapper">
                     <h3 class="item-name">${item.nama}</h3>
-                    <p class="item-price">Total: Rp${totalPrice.toLocaleString('id-ID')}</p>
+                    <p class="item-price">Total (Keranjang): Rp${totalPrice.toLocaleString('id-ID')}</p>
 
                     <div class="item-quantity-section">
                         <span class="quantity-label-text">Jumlah (kg):</span>
@@ -304,7 +304,7 @@
             document.getElementById('emptyCart').style.display = 'block';
             document.getElementById('clearCartBtn').style.display = 'none';
             document.getElementById('checkoutBtn').style.display = 'none';
-            document.getElementById('totalPriceText').textContent = "Total : Rp0";
+            document.getElementById('totalPriceText').textContent = "Total (Keranjang): Rp0";
         }
 
         // Update total price
@@ -317,7 +317,7 @@
 
             const totalPriceElement = document.getElementById('totalPriceText');
             if (totalPriceElement) {
-                totalPriceElement.textContent = `Total : Rp${total.toLocaleString('id-ID')}`;
+                totalPriceElement.textContent = `Total (Keranjang): Rp${total.toLocaleString('id-ID')}`;
             }
         }
     </script>
