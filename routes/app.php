@@ -38,6 +38,8 @@ Route::post('/add-to-cart', [ItemController::class, 'addToCart'])
 // Cart routes
 Route::group(['controller' => CartController::class], function () {
     Route::get('/cart', 'showCart')->name('cart.show');
+    Route::get('/cart2', 'showCart2')->name('cart2.show');
+
     Route::get('/cart-items', 'getCartItems')->name('cart.items');
 //    Route::post('/add-to-cart', 'addToCart')->name('cart.add');
     Route::post('/update-cart-quantity', 'updateCartQuantity')->name('cart.update');
