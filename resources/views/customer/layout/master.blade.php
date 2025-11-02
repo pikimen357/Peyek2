@@ -11,7 +11,7 @@
                     Daftar Produk</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Pesanan Anda</a>
+                <a class="nav-link" href="{{ route('history') }}">Pesanan Anda</a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('cart2.show') }}" class="nav-link position-relative text-white bi bi-cart fs-4">

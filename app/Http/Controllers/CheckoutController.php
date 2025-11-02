@@ -142,10 +142,9 @@ class CheckoutController extends Controller
 
     public function orderHistory()
     {
-        // Tambahkan get() untuk mengeksekusi query
-        $orders = OrderItem::where('order_id', 2)->get();
+        $orders = OrderItem::whereIn('order_id', [1,3,2,4])->get();
 
-        return view('customer.history', compact('orders'));
+        return view('customer.history', compact('orders', ));
     }
 
 

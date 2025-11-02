@@ -1,22 +1,101 @@
 .order-card {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border: 1px solid #e0e0e0;
-    padding: 20px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    padding: 15px;
     transition: all 0.3s ease;
+    width: 350px;
 }
 
 .order-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.order-image {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
 }
 
 .order-title {
     color: #333;
     font-weight: 600;
+    font-size: 16px;
 }
 
-.order-date, .order-price {
+.order-date, .order-price, .order-status {
     color: #666;
-    font-size: 14px;
+    font-size: 13px;
 }
 
+.order-status .badge {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 4px 12px;
+}
+
+/* Tambahkan di CSS file Anda */
+.badge-selesai {
+    background-color: #007bff;
+    color: white;
+    padding: 0.25em 0.6em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-weight: 500;
+    /*width: 320px;*/
+}
+
+.badge-diproses {
+    background-color: #28a745;
+    color: white;
+    padding: 0.25em 0.6em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-weight: 500;
+}
+
+.badge-unpaid{
+    background-color: #b7472e;
+    color: white;
+    padding: 0.25em 0.6em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-weight: 500;
+}
+
+.btn-bayar {
+    background-color: #3264d1;
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 4px;
+    font-weight: 300;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    width: 320px;
+}
+
+.btn-review {
+    background-color: #dfb428;
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 4px;
+    font-weight: 300;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    width: 320px;
+}
+
+.btn-review, .btn-review:hover{
+     background-color: #dfb428;
+}
+
+.btn-review:hover{
+    color: white;
+    font-weight: bolder;
+}
+
+.btn-bayar:hover {
+    background-color: #555;
+    color: white;
+}
