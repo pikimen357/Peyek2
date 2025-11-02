@@ -54,6 +54,9 @@ Route::group(['controller' => CheckoutController::class], function () {
 
     Route::post('/checkout', 'store')
         ->name('checkout.store');
+
+    Route::get('/history', 'orderHistory')
+        ->name('history');
 });
 
 

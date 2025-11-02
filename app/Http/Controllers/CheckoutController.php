@@ -140,4 +140,13 @@ class CheckoutController extends Controller
 
     }
 
+    public function orderHistory()
+    {
+        // Tambahkan get() untuk mengeksekusi query
+        $orders = OrderItem::where('order_id', 2)->get();
+
+        return view('customer.history', compact('orders'));
+    }
+
+
 }

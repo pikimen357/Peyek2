@@ -1,0 +1,22 @@
+.order-card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.order-title {
+    color: #333;
+    font-weight: 600;
+}
+
+.order-date, .order-price {
+    color: #666;
+    font-size: 14px;
+}
+
