@@ -10,7 +10,8 @@
     <div class="d-flex justify-content-center align-items-center container" id="orderCont">
       <div class="box-wrapper row gap-1 mt-2" style="width: 370px;">
         <div class="col  mt-2" style="margin-right: 8px;">
-          <img src="{{ asset('img_item_upload/' . $defaultItem->gambar) }}" class="mt-1" id="topImg" data-id="{{ $defaultItem->id }}" alt="">
+          <img src="{{ asset('img_item_upload/' . $defaultItem->gambar) }}"
+               class="mt-1" id="topImg" data-id="{{ $defaultItem->id }}" alt="">
         </div>
         <div class="col  mt-2" id="col2">
 
@@ -42,22 +43,26 @@
     <div class="d-flex justify-content-center container p-4 mt-5" id="varCont">
       <div class="row w-100 mb-5" style="max-width: 600px;">
         <h2 id="varianLain" class="mb-4 fw-bold fs-3">Varian Lainnya</h2>
-          @foreach($items as $item)
-              <div class="col varian-item p-3 mb-4"
-                   style="line-height: 22px; cursor: pointer;"
-                   data-id="{{ $item->id }}"
-                   data-nama="{{ $item->nama_peyek }}"
-                   data-harga="{{ $item->hrg_kiloan }}"
-                   data-topping="{{ $item->topping }}"
-                   data-gambar="{{ asset('img_item_upload/' . $item->gambar) }}">
-                  <img src="{{ asset('img_item_upload/' . $item->gambar) }}" class="Vlimg" alt="">
-                  <h3 class="mt-3" style="font-size: 13.5px;">{{ $item->nama_peyek }}</h3>
-                  <p>
-                      <span class="transparent-text">{{ ucfirst($item->topping) }}</span><br>
-                      Rp{{ number_format($item->hrg_kiloan, 0, ',', '.') }}/kg
-                  </p>
-              </div>
-          @endforeach
+        @foreach($items as $item)
+          <div class="col-5 col-md-4 col-lg-3 varian-item p-3 p-md-3 mb-3"
+               id="itemsCont"
+               style="line-height: 22px; cursor: pointer;"
+               data-id="{{ $item->id }}"
+               data-nama="{{ $item->nama_peyek }}"
+               data-harga="{{ $item->hrg_kiloan }}"
+               data-topping="{{ $item->topping }}"
+               data-gambar="{{ asset('img_item_upload/' . $item->gambar) }}">
+
+            <div class="varian-content"> <!-- Tambahkan wrapper untuk konten -->
+              <img src="{{ asset('img_item_upload/' . $item->gambar) }}" class="Vlimg" alt=""> <!-- Tambahkan w-100 -->
+              <h3 class="mt-2 mt-md-3" style="font-size: 13.5px;">{{ $item->nama_peyek }}</h3>
+              <p class="mb-1" style="font-size: 12px;">
+                <span class="transparent-text">{{ ucfirst($item->topping) }}</span><br>
+                Rp{{ number_format($item->hrg_kiloan, 0, ',', '.') }}/kg
+              </p>
+            </div>
+          </div>
+        @endforeach
       </div>
     </div>
 
@@ -164,6 +169,13 @@
                 hargaPerKg = hargaBaru;
                 harga.setAttribute("value", hargaBaru);
                 updateHarga();
+
+                // Scroll ke atas dengan efek smooth
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+                });
+
               });
             });
 
