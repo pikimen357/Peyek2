@@ -59,5 +59,12 @@ Route::group(['controller' => CheckoutController::class], function () {
         ->name('history');
 });
 
+// Route chatbot AI DeepSeek
+Route::post('/chatbot-ai', [ItemController::class, 'chatbotAI'])
+    ->name('chatbot.ai');
+
+// Route chatbot rule-based (existing) - tetap ada
+//Route::post('/chatbot', [ItemController::class, 'chatbot'])->name('chatbot');
+
 
 

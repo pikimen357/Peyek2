@@ -3,11 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Services\DeepSeekService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
+    protected $deepSeekService;
+
+    public function __construct(DeepSeekService $deepSeekService)
+    {
+        $this->deepSeekService = $deepSeekService;
+    }
+
     public function index(){
         $items = Item::all();
 
@@ -20,6 +29,39 @@ class ItemController extends Controller
             'defaultItem' => $defaultItem
         ]);
     }
+
+    // METHOD BARU: Chatbot dengan AI DeepSeek
+    public function chatbotAI(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string|max:500'
+        ]);
+
+        try {
+            $message = $request->input('message');
+
+            // Gunakan AI DeepSeek untuk memproses pertanyaan
+            $aiResponse = $this->deepSeekService->handleCustomerQuestion($message);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $aiResponse,
+                'type' => 'ai',
+                'products' => [],
+                'total_products' => 0
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Maaf, sedang ada gangguan. Silakan coba lagi.',
+                'products' => [],
+                'total_products' => 0
+            ], 500);
+        }
+    }
+
+    // Method chatbot dengan rule-based (existing) - TETAP ADA
     public function chatbot(Request $request){
         $message = strtolower($request->input('message'));
         $response = '';
@@ -133,14 +175,6 @@ class ItemController extends Controller
                 'message' => 'Item ID tidak valid'
             ], 400);
         }
-
-
-//        if (!$item_id || !$berat_kg) {
-//            return response()->json([
-//                'status' => 'error',
-//                'message' => 'Data tidak lengkap'
-//            ], 400);
-//        }
 
         $item = Item::find($item_id);
 
