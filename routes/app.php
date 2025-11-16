@@ -63,6 +63,15 @@ Route::group(['controller' => CheckoutController::class], function () {
 Route::post('/chatbot-ai', [ItemController::class, 'chatbotAI'])
     ->name('chatbot.ai');
 
+// Route chatbot hybrid (utama)
+Route::post('/chatbot-hybrid', [ItemController::class, 'chatbotHybrid'])->name('chatbot.hybrid');
+
+// Route untuk debugging
+Route::post('/chatbot-debug', [ItemController::class, 'chatbotDebug'])->name('chatbot.debug');
+
+// Route chatbot rule-based (existing) - tetap ada
+Route::post('/chatbot', [ItemController::class, 'chatbot'])->name('chatbot');
+
 // Route chatbot rule-based (existing) - tetap ada
 //Route::post('/chatbot', [ItemController::class, 'chatbot'])->name('chatbot');
 
