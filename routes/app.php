@@ -75,5 +75,27 @@ Route::post('/chatbot', [ItemController::class, 'chatbot'])->name('chatbot');
 // Route chatbot rule-based (existing) - tetap ada
 //Route::post('/chatbot', [ItemController::class, 'chatbot'])->name('chatbot');
 
+// routes/web.php - tambahkan route test sementara
+Route::get('/test-deepseek', function() {
+    try {
+        $deepSeekService = app(\App\Services\DeepSeekService::class);
 
+        // Test koneksi API
+        echo "Testing DeepSeek Service...\n";
+        echo "API Key: " . (env('DEEPSEEK_API_KEY') ? '✅ Set' : '❌ Not Set') . "\n";
+
+        // Test pertanyaan sederhana
+        $testQuestion = "Halo, apa kabar?";
+        echo "Test Question: " . $testQuestion . "\n";
+
+        $response = $deepSeekService->handleCustomerQuestion($testQuestion);
+
+        echo "✅ Service Response: " . $response . "\n";
+        return response()->json(['success' => true, 'response' => $response]);
+
+    } catch (\Exception $e) {
+        echo "❌ Service Error: " . $e->getMessage() . "\n";
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
 
