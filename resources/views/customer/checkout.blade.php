@@ -95,20 +95,6 @@
                                 </div>
                             </div>
 
-                            <!-- Checkbox Kirim ke Alamat Lain -->
-                            @if(Auth::check())
-                            <div class="mb-3 p-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox"
-                                           id="useOtherAddress"
-                                           {{ old('use_other_address') ? 'checked' : '' }}>
-                                    <label class="form-check-label fw-semibold" for="useOtherAddress">
-                                        Kirim ke alamat lain
-                                    </label>
-                                </div>
-                            </div>
-                            @endif
-
                             <div class="row mb-3 p-2">
                                 <div class="col-md-6 mb-3 mb-md-0">
                                     <label class="form-label" for="kecamatan">Kecamatan</label>
@@ -285,7 +271,9 @@
             // Reset ke kosong untuk alamat lain
             kecamatanSelect.value = '';
             desaSelect.innerHTML = '<option value="">Pilih Desa</option>';
-            desaSelect.disabled = true;
+            // desaSelect.disabled = true;
+            // kecamatanSelect.disabled = true;
+
             alamatTextarea.value = '';
 
             kecamatanSelect.classList.remove('bg-light');
@@ -297,6 +285,10 @@
                 kecamatanSelect.value = userLocation.kecamatan;
                 populateDesa(userLocation.kecamatan, userLocation.desa);
                 alamatTextarea.value = userAlamat;
+
+                // kecamatanSelect.disabled = true;
+                // desaSelect.disabled = true;
+                // alamatTextarea.disabled = true;
 
                 kecamatanSelect.classList.add('bg-light');
                 desaSelect.classList.add('bg-light');
