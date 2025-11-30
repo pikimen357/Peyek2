@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Location;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $locations = Location::select('id', 'desa', 'kecamatan')->get();
+        return view('auth.register', compact('locations'));
     }
 
     /**
@@ -30,21 +32,36 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'nama' => ['required', 'string', 'max:255'],
+            'telepon' => ['required', 'string', 'max:20', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'kecamatan' => ['required', 'string'],
+            'desa' => ['required', 'string'],
+            'alamat' => ['required', 'string'],
         ]);
 
+        // Cari id_lokasi berdasarkan kecamatan dan desa
+        $lokasi = Location::where('kecamatan', $request->kecamatan)
+                          ->where('desa', $request->desa)
+                          ->first();
+
+        if (!$lokasi) {
+            return back()->withErrors(['desa' => 'Lokasi tidak ditemukan'])->withInput();
+        }
+
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'nama' => $request->nama,
+            'telepon' => $request->telepon,
             'password' => Hash::make($request->password),
+            'id_lokasi' => $lokasi->id,
+            'alamat' => $request->alamat,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('landing', absolute: false))
+            ->with('success', 'Registrasi berhasil! Selamat datang, ' . $user->nama);
     }
 }

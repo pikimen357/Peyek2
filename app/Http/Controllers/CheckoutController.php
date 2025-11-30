@@ -9,21 +9,30 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
     public function index(){
+        $user = Auth::user();
         $items = Session::get('cart');
-        $locations = Location::select('desa', 'kecamatan')->get();
+        $locations = Location::select('id', 'desa', 'kecamatan')->get();
 
         if(empty($items)){
             return redirect()->route('cart.show')
                 ->with('error', 'Your cart is empty!');
         }
+
+        // Ambil lokasi user jika sudah login
+        $userLocation = null;
+        if($user && $user->id_lokasi){
+            $userLocation = Location::find($user->id_lokasi);
+        }
+
         return view('customer.checkout',
-            compact(['items', 'locations']));
+            compact(['items', 'locations', 'user', 'userLocation']));
     }
 
     /**
@@ -73,16 +82,20 @@ class CheckoutController extends Controller
         // save order
         $validated_data = $request->validated();
 
-        $user = User::updateOrCreate(
-            [
-                'telepon' => $validated_data['telepon']
-            ],
-            [
-                'nama' => $validated_data['nama'],
-                'id_lokasi' => $this->getLocationId($validated_data['kecamatan'], $validated_data['desa']),
-                'alamat' => $validated_data['alamat'] ?? null, // Opsional, pakai null coalescing
-            ]
-        );
+        if(Auth::check()){
+            $user = Auth::user();
+        } else {
+            $user = User::updateOrCreate(
+                [
+                    'telepon' => $validated_data['telepon']
+                ],
+                [
+                    'nama' => $validated_data['nama'],
+                    'id_lokasi' => $this->getLocationId($validated_data['kecamatan'], $validated_data['desa']),
+                    'alamat' => $validated_data['alamat'] ?? null, // Opsional, pakai null coalescing
+                ]
+            );
+        }
 
         $locationId = $this->getLocationId($validated_data['kecamatan'], $validated_data['desa']);
 
@@ -134,7 +147,7 @@ class CheckoutController extends Controller
 
             //MIDTRANS INTEGRATION (next)
 
-            return redirect()->route('landing')
+            return redirect()->route('customer.history')
                 ->with('success', 'Pesanan berhasil dibuat (non tunai)');
         }
 
@@ -142,9 +155,15 @@ class CheckoutController extends Controller
 
     public function orderHistory()
     {
-        $orders = OrderItem::whereIn('order_id', [1,3,2,4])->get();
+        // Ambil order items dengan relasi lengkap
+        $orders = OrderItem::whereHas('order', function($query) {
+            $query->where('user_id', Auth::id());
+        })
+        ->with(['order', 'item']) // Load relasi yang diperlukan
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        return view('customer.history', compact('orders', ));
+        return view('customer.history', compact('orders'));
     }
 
 

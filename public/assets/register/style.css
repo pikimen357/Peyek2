@@ -1,0 +1,48 @@
+
+body {
+  background-image: url('../../img_item_upload/wallpaperPYK.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/*   Sembunyikan Navbar
+     yang berisi daftar produk, pesanan anda, dan keranjang
+*/
+.sub-navbar {
+    display: none !important;
+}
+
+#btn-daftar{
+    background-color: #5C5645;
+}
+#btn-batal{
+    background-color: #9d1919;
+}
+
+#signup{
+  font-family: 'Poppins', sans-serif;
+  margin-top: 120px;
+  margin-bottom: 80px;
+  border-radius: 7px;
+  background: #dbcbac;
+  color: #6C5C4D;
+  align-items: center;
+  justify-content: center;
+}
+
+#form-signup{
+    font-size: 16px;
+}
+
+@media screen and (max-width: 470px) {
+  #signup {
+    max-width: 320px;
+  }
+
+}
+
+
+
+
+

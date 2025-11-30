@@ -1,0 +1,47 @@
+
+
+        /* Responsive untuk mobile */
+        @media (max-width: 768px) {
+            .sub-navbar {
+                padding: 10px 0;
+            }
+
+            .sub-navbar .nav-link {
+                padding: 6px 15px;
+                margin: 2px;
+                font-size: 14px;
+            }
+        }
+
+body {
+    background-image: url('../../img_item_upload/wallpaperPYK.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+/*   Sembunyikan Navbar
+     yang berisi daftar produk, pesanan anda, dan keranjang
+*/
+.sub-navbar {
+    display: none !important;
+}
+
+#loginContainer {
+  margin-top: 150px;
+  background: #dbcbac;
+  max-width: 320px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  color: #6C5C4D;
+}
+
+#submit{
+    background-color: #5C5645;
+    border-radius: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+
+
